@@ -2,6 +2,17 @@ from bottle import request, response
 import json
 from models import Mes
 
+def list_mes():
+    meses = Mes.select().where(Mes.nome_mes != "")
+    payload = []
+
+    for mes in meses.dicts():
+        payload.append(mes)
+
+    response.status = 200
+
+    return {response.status: payload}
+
 def cadastro_mes():
     data = request.json
     mes = data["nome_mes"]
