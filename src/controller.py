@@ -1,6 +1,24 @@
 from bottle import request, response
 import json
+
+from peewee import Select
 from models import Mes
+
+def deleta_mes(mes_id):
+    print(mes_id)
+    mes = Mes.select().where(Mes.id == mes_id).count()
+    print(mes)
+    
+    if not mes:
+        response.status = 400
+        return {response.status: "Mês não existe"}
+
+    response.status = 200
+    
+    exclui_mes = Mes.delete().where(Mes.id == mes_id)
+    exclui_mes.execute()
+
+    return {response.status: "Mês deletado"}
 
 def list_mes():
     meses = Mes.select().where(Mes.nome_mes != "")
