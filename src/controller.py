@@ -4,10 +4,28 @@ import json
 from peewee import Select
 from models import Mes
 
-def deleta_mes(mes_id):
-    print(mes_id)
+
+def atualiza_mes(mes_id):
+
+    data = request.json
+
+    nome_mes = data["nome_mes"]
+
     mes = Mes.select().where(Mes.id == mes_id).count()
-    print(mes)
+    
+    if not mes:
+        response.status = 400
+        return {response.status: "Mês não existe"}
+
+    update_mes = Mes.update({Mes.nome_mes : nome_mes}).where(Mes.id == mes_id)
+    update_mes.execute()
+
+    response.status = 200
+
+    return {response.status : "Mês atualizado"}
+
+def deleta_mes(mes_id):
+    mes = Mes.select().where(Mes.id == mes_id).count()
     
     if not mes:
         response.status = 400
